@@ -79,7 +79,7 @@ mkdir -p "$log_dir"
 
 task_name="Copy Profile files"
 log_message "info" "Start: $task_name"  
-cp -r  "$SCRIPT_DIR/profile_content" "$HOME"
+cp -r  "$SCRIPT_DIR/profile_content/." "$HOME"
 log_message "info" "End: $task_name"
 
 
@@ -122,6 +122,7 @@ fi
 task_name="Install DNF packages"
 log_message "info" "Start: $task_name"
 if [[ -f "$src_dir/dnf-packages.txt" ]] && [[ ! -f "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_').done" ]]; then
+    # shellcheck disable=SC2046
     sudo dnf install -y $(awk '{print $1}' "$src_dir/dnf-packages.txt")
     sudo dnf swap 'ffmpeg-free' 'ffmpeg' --allowerasing
     touch "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_').done"
@@ -175,15 +176,15 @@ log_message "info" "Start: $task_name"
 ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -C "$USER@$HOSTNAME" -N ""
 log_message "info" "End: $task_name"
 
-task_name="Copy Fonts"
+task_name="Install Fonts"
 log_message "info" "Start: $task_name"
-if [[ -d "$src_dir/fonts" ]]; then
-    mkdir -p ~/.fonts
-    cp "$src_dir/fonts/*.ttf" ~/.fonts/
-    sudo fc-cache -f -v
-else
-    log_message "info" "Skipped: $task_name"
-fi
+mkdir -p ~/.fonts
+wget -O ~/.fonts/MesloLGS_NF_Regular.ttf "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf"
+wget -O ~/.fonts/MesloLGS_NF_Bold.ttf "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf"
+wget -O ~/.fonts/MesloLGS_NF_Italic.ttf "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf"
+wget -O ~/.fonts/MesloLGS_NF_Bold_Italic.ttf "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"
+
+sudo fc-cache -f -v
 log_message "info" "End: $task_name"
 
 
