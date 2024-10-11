@@ -65,16 +65,16 @@ logfile=$log_dir/setup_$(date +"%Y-%m-%d_%H-%M-%S").log
 trap 'chk_exit' ERR
 mkdir -p "$log_dir"
 
-for env in "${envs[@]}"; do
-    if [[ -z "${!env}" ]]; then
-        unset_envs+=("$env")
-    fi
-done
-if [[ ${#unset_envs[@]} -ne 0 ]]; then
-    log_message "error" "Not all ENVs are set:"
-    echo "${envs[@]}"
-    exit 1
-fi
+# for env in "${envs[@]}"; do
+#     if [[ -z "${!env}" ]]; then
+#         unset_envs+=("$env")
+#     fi
+# done
+# if [[ ${#unset_envs[@]} -ne 0 ]]; then
+#     log_message "error" "Not all ENVs are set:"
+#     echo "${envs[@]}"
+#     exit 1
+# fi
 
 
 task_name="Copy Profile files"
