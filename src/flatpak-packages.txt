@@ -1,0 +1,9 @@
+com.github.qarmin.szyszka
+com.rtosta.zapzap
+com.yacreader.YACReader
+io.freetubeapp.FreeTube
+net.cozic.joplin_desktop
+net.davidotek.pupgui2
+net.lutris.Lutris
+org.jdownloader.JDownloader
+io.github.celluloid_player.Celluloid
