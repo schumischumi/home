@@ -34,27 +34,25 @@ log_message() {
 }
 chk_exit() {
     local exit_code=$1
-    # shift
-    # local ok_codes=("$@")
-    # local exit_good=0
-    # if [[ ${#ok_codes[@]} -eq 0 ]]; then
-    #     ok_codes=(0)
-    # fi
-    # for n in "${ok_codes[@]}"; do
-    #     if [[ "$n" -eq "exit_code" ]]; then
-    #         exit_good=1
-    #     fi
-    # done
     if [[ $exit_code -eq 0 ]]; then
         log_message "error" "$task_name had exit code: $exit_code"
         # shellcheck disable=SC2086
         exit $exit_code
     fi
 }
+check_vars()
+{
+    var_names=("$@")
+    for var_name in "${var_names[@]}"; do
+        [ -z "${!var_name}" ] && echo "$var_name is unset." && var_unset=true
+    done
+    [ -n "$var_unset" ] && exit 1
+    return 0
+}
 
 # init
 show_debug=0
-envs=("HOME" "USER" "HOSTNAMER")
+envs=("HOME" "USER" "HOSTNAME")
 unset_envs=()
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 src_dir="$SCRIPT_DIR/src"
@@ -65,16 +63,17 @@ logfile=$log_dir/setup_$(date +"%Y-%m-%d_%H-%M-%S").log
 trap 'chk_exit' ERR
 mkdir -p "$log_dir"
 
-# for env in "${envs[@]}"; do
-#     if [[ -z "${!env}" ]]; then
-#         unset_envs+=("$env")
-#     fi
-# done
-# if [[ ${#unset_envs[@]} -ne 0 ]]; then
-#     log_message "error" "Not all ENVs are set:"
-#     echo "${envs[@]}"
-#     exit 1
-# fi
+
+for env in "${envs[@]}"; do
+    if [[ -z "${!env}" ]]; then
+        unset_envs+=("$env")
+    fi
+done
+if [[ ${#unset_envs[@]} -ne 0 ]]; then
+    log_message "error" "Not all ENVs are set:"
+    echo "${envs[@]}"
+    exit 1
+fi
 
 task_name="Install DNF repositories"
 log_message "info" "Start: $task_name"
@@ -139,7 +138,8 @@ task_name="Install oh-my-zsh"
 log_message "info" "Start: $task_name"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --skip-chsh --unattended
-    echo "$USER:$(which zsh)" | sudo chsh -s $(which zsh) $USER
+    # shellcheck disable=SC2086
+    echo "$USER:$(which zsh)" | sudo chsh -s "$(which zsh)" $USER
 else
     log_message "info" "Skipped: $task_name"
 fi
@@ -174,7 +174,7 @@ log_message "info" "End: $task_name"
 task_name="Create SSH keys"
 log_message "info" "Start: $task_name"
 if [[ ! -f "$HOME/.ssh/id_ed25519" ]]; then
-    ssh-keygen -t ed25519 -f $HOME/.ssh/id_ed25519 -C "$USER@$HOSTNAME" -N ""
+    ssh-keygen -t ed25519 -f "$HOME/.ssh/id_ed25519" -C "$USER@$HOSTNAME" -N ""
 else
     log_message "info" "Skipped: $task_name"
 fi
