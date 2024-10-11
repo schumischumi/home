@@ -76,13 +76,6 @@ mkdir -p "$log_dir"
 #     exit 1
 # fi
 
-
-task_name="Copy Profile files"
-log_message "info" "Start: $task_name"  
-cp -r  "$SCRIPT_DIR/profile_content/." "$HOME"
-log_message "info" "End: $task_name"
-
-
 task_name="Install DNF repositories"
 log_message "info" "Start: $task_name"
 if [[ ! -f "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_').done" ]]; then
@@ -145,14 +138,21 @@ log_message "info" "End: $task_name"
 task_name="Install oh-my-zsh"
 log_message "info" "Start: $task_name"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --skip-chsh
+    echo "$USER:$(which zsh)" | sudo chsh -s $(which zsh) $USER
 else
     log_message "info" "Skipped: $task_name"
 fi
 log_message "info" "End: $task_name"
 
 
-task_name="Install Flatpak packages"
+task_name="Copy Profile files"
+log_message "info" "Start: $task_name"  
+cp -r  "$SCRIPT_DIR/profile_content/." "$HOME"
+log_message "info" "End: $task_name"
+
+
+task_name="Install Flatpak packages" 
 log_message "info" "Start: $task_name"
 if [[ -f "$src_dir/flatpak-packages.txt" ]] && [[ ! -f "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_').done" ]]; then
     while IFS= read -r app; do
