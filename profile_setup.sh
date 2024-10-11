@@ -56,9 +56,9 @@ envs=("HOME" "USER" "HOSTNAME")
 unset_envs=()
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 src_dir="$SCRIPT_DIR/src"
-echo "$src_dir"
 log_dir="$HOME/.profile_setup"
 logfile=$log_dir/setup_$(date +"%Y-%m-%d_%H-%M-%S").log
+
 # Create trap to catch errors
 trap 'chk_exit' ERR
 mkdir -p "$log_dir"
