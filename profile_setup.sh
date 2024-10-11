@@ -173,7 +173,11 @@ log_message "info" "End: $task_name"
 
 task_name="Create SSH keys"
 log_message "info" "Start: $task_name"
-ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -C "$USER@$HOSTNAME" -N ""
+if [[ ! -f "$HOME/.ssh/id_ed25519" ]]; then
+    ssh-keygen -t ed25519 -f $HOME/.ssh/id_ed25519 -C "$USER@$HOSTNAME" -N ""
+else
+    log_message "info" "Skipped: $task_name"
+fi
 log_message "info" "End: $task_name"
 
 task_name="Install Fonts"

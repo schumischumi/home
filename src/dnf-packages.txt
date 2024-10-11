@@ -35,3 +35,5 @@ openh264
 p7zip-plugins
 unzip
 git
+wget
+curl
