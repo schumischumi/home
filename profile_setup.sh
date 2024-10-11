@@ -79,7 +79,7 @@ mkdir -p "$log_dir"
 
 task_name="Copy Profile files"
 log_message "info" "Start: $task_name"  
-cp -r  "$SCRIPT_DIR/profile_content/*" "$HOME"
+cp -r  "$SCRIPT_DIR/profile_content" "$HOME"
 log_message "info" "End: $task_name"
 
 
