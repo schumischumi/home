@@ -138,7 +138,7 @@ log_message "info" "End: $task_name"
 task_name="Install oh-my-zsh"
 log_message "info" "Start: $task_name"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --skip-chsh --unattended
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --skip-chsh --unattended
     echo "$USER:$(which zsh)" | sudo chsh -s $(which zsh) $USER
 else
     log_message "info" "Skipped: $task_name"
