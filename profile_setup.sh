@@ -106,10 +106,10 @@ if [[ ! -f "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '
     sudo dnf -y update
     sudo dnf -y upgrade --refresh
     # install app-stream metadata
-    sudo dnf group -y update core
-    sudo fwupdmgr refresh --force
-    sudo fwupdmgr get-updates
-    sudo fwupdmgr update
+    # sudo dnf group -y update core
+    # sudo fwupdmgr refresh --force
+    # sudo fwupdmgr get-updates
+    # sudo fwupdmgr update
     touch "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_').done"
     log_message "info" "End: $task_name"
     log_message "info" "You should reboot now. Exit 0"
