@@ -122,7 +122,7 @@ fi
 task_name="Install DNF packages"
 log_message "info" "Start: $task_name"
 if [[ -f "$src_dir/dnf-packages.txt" ]] && [[ ! -f "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_').done" ]]; then
-    sudo dnf install -y "$(awk '{print $1}' "$src_dir/dnf-packages.txt")"
+    sudo dnf install -y $(awk '{print $1}' "$src_dir/dnf-packages.txt")
     sudo dnf swap 'ffmpeg-free' 'ffmpeg' --allowerasing
     touch "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_').done"
 else
