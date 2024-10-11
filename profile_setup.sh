@@ -86,12 +86,13 @@ log_message "info" "End: $task_name"
 task_name="Install DNF repositories"
 log_message "info" "Start: $task_name"
 if [[ ! -f "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_').done" ]]; then
-    sudo dnf install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
-    sudo dnf install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+    sudo dnf install -y "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+    sudo dnf install -y "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+    sudo dnf install -y 'dnf-command(config-manager)'
     sudo dnf config-manager -y --add-repo https://repository.mullvad.net/rpm/stable/mullvad.repo
     sudo dnf config-manager -y --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
     sudo dnf config-manager --set-enabled fedora-cisco-openh264
-    flatpak remote-modify --enable flathub
+    #flatpak remote-modify --enable flathub
     touch "$log_dir/$(echo "$task_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_').done"
 else
     log_message "info" "Skipped: $task_name"
